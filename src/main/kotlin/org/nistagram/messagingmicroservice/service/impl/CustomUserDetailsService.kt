@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class CustomUserDetailsService(private val userRepository: UserRepository) : UserDetailsService {
-    override fun loadUserByUsername(username: String): UserDetails =
-            userRepository.findByNistagramUsername(username)
-                    ?: throw UsernameNotFoundException(String.format("No user found with username '%s'.", username))
+    override fun loadUserByUsername(username: String): UserDetails = userRepository.findByNistagramUsername(username)
+            ?: throw UsernameNotFoundException(String.format("No user found with username '%s'.", username))
 }

@@ -19,8 +19,8 @@ class TokenAuthenticationFilter(private val tokenUtils: TokenUtils, private val 
         if (authToken != null) {
             val username: String? = tokenUtils.getUsernameFromToken(authToken)
             if (username != null) {
-                val userDetails = userDetailsService!!.loadUserByUsername(username)
-                if (tokenUtils?.validateToken(authToken, userDetails) == true) {
+                val userDetails = userDetailsService.loadUserByUsername(username)
+                if (tokenUtils.validateToken(authToken, userDetails) == true) {
                     val authentication = TokenBasedAuthentication(userDetails)
                     authentication.token = authToken
                     SecurityContextHolder.getContext().authentication = authentication
