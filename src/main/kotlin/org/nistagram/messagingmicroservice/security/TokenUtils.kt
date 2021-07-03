@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
-import java.util.*
 import javax.servlet.http.HttpServletRequest
 
 @Component
@@ -28,17 +27,6 @@ class TokenUtils {
         null
     }
 
-    fun getIssuedAtDateFromToken(token: String?): Date? {
-        val issueAt: Date?
-        issueAt = try {
-            val claims = getAllClaimsFromToken(token)
-            claims!!.issuedAt
-        } catch (e: Exception) {
-            null
-        }
-        return issueAt
-    }
-
     fun getToken(request: HttpServletRequest): String? {
         val authHeader = getAuthHeaderFromHeader(request)
         return if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -48,10 +36,6 @@ class TokenUtils {
 
     fun getAuthHeaderFromHeader(request: HttpServletRequest): String? {
         return request.getHeader(AUTH_HEADER)
-    }
-
-    private fun isCreatedBeforeLastPasswordReset(created: Date?, lastPasswordReset: Date?): Boolean? {
-        return lastPasswordReset != null && created!!.before(lastPasswordReset)
     }
 
     private fun getAllClaimsFromToken(token: String?): Claims? = try {

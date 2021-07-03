@@ -19,6 +19,7 @@ data class User(@Id
                 @ManyToMany(fetch = FetchType.EAGER)
                 @JoinTable(name = "user_role", joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")], inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")])
                 var roles: List<Role> = listOf()) : UserDetails {
+    @Transient
     val administrationRole: String = "NISTAGRAM_USER_ROLE"
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> =
