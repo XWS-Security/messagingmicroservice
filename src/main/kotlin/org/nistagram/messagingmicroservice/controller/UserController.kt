@@ -3,11 +3,12 @@ package org.nistagram.messagingmicroservice.controller
 import org.nistagram.messagingmicroservice.controller.dto.CreateUserDto
 import org.nistagram.messagingmicroservice.controller.dto.ResponseDto
 import org.nistagram.messagingmicroservice.controller.dto.UpdateUserDto
-import org.nistagram.messagingmicroservice.exception.UserAlreadyExistsException
-import org.nistagram.messagingmicroservice.exception.UserDoesNotExistsException
+import org.nistagram.messagingmicroservice.util.UserAlreadyExistsException
+import org.nistagram.messagingmicroservice.util.UserDoesNotExistsException
 import org.nistagram.messagingmicroservice.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -40,6 +41,7 @@ class UserController(private val userService: UserService) {
     }
 
     @PutMapping("/")
+    @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
     fun updateUser(@RequestBody userDto: UpdateUserDto): ResponseEntity<ResponseDto> {
         return try {
             userService.update(userDto)

@@ -1,4 +1,4 @@
-package org.nistagram.messagingmicroservice.exception
+package org.nistagram.messagingmicroservice.util
 
 class UserAlreadyExistsException : RuntimeException("User with the same username already exists.")
 
