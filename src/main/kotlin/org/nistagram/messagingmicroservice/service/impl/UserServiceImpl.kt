@@ -4,8 +4,8 @@ import org.nistagram.messagingmicroservice.controller.dto.UpdateUserDto
 import org.nistagram.messagingmicroservice.data.model.User
 import org.nistagram.messagingmicroservice.data.repository.RoleRepository
 import org.nistagram.messagingmicroservice.data.repository.UserRepository
-import org.nistagram.messagingmicroservice.exception.UserAlreadyExistsException
-import org.nistagram.messagingmicroservice.exception.UserDoesNotExistsException
+import org.nistagram.messagingmicroservice.util.UserAlreadyExistsException
+import org.nistagram.messagingmicroservice.util.UserDoesNotExistsException
 import org.nistagram.messagingmicroservice.service.UserService
 import org.springframework.stereotype.Service
 
