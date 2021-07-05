@@ -3,7 +3,7 @@ package org.nistagram.messagingmicroservice.controller
 import org.nistagram.messagingmicroservice.controller.dto.*
 import org.nistagram.messagingmicroservice.service.UserService
 import org.nistagram.messagingmicroservice.util.UserAlreadyExistsException
-import org.nistagram.messagingmicroservice.util.UserCannotReceiveMessages
+import org.nistagram.messagingmicroservice.util.UserCannotReceiveMessagesException
 import org.nistagram.messagingmicroservice.util.UserDoesNotExistsException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -63,7 +63,7 @@ class UserController(private val userService: UserService) {
             ResponseEntity(FindUserResponse(user = result, success = true), HttpStatus.OK)
         } catch (e: UserDoesNotExistsException) {
             ResponseEntity(FindUserResponse(message = e.message ?: ""), HttpStatus.OK)
-        } catch (e: UserCannotReceiveMessages) {
+        } catch (e: UserCannotReceiveMessagesException) {
             ResponseEntity(FindUserResponse(message = e.message ?: ""), HttpStatus.OK)
         } catch (e: Exception) {
             ResponseEntity(FindUserResponse(message = "Something went wrong"), HttpStatus.BAD_REQUEST)

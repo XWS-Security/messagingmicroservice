@@ -6,7 +6,7 @@ import org.nistagram.messagingmicroservice.data.repository.RoleRepository
 import org.nistagram.messagingmicroservice.data.repository.UserRepository
 import org.nistagram.messagingmicroservice.service.UserService
 import org.nistagram.messagingmicroservice.util.UserAlreadyExistsException
-import org.nistagram.messagingmicroservice.util.UserCannotReceiveMessages
+import org.nistagram.messagingmicroservice.util.UserCannotReceiveMessagesException
 import org.nistagram.messagingmicroservice.util.UserDoesNotExistsException
 import org.springframework.stereotype.Service
 
@@ -41,6 +41,6 @@ class UserServiceImpl(private val userRepository: UserRepository, private val ro
     override fun find(username: String): User {
         val user = userRepository.findByNistagramUsername(username) ?: throw UserDoesNotExistsException()
         // TODO: validate following status/blocked
-        return if (user.messagesEnabled) user else throw UserCannotReceiveMessages()
+        return if (user.messagesEnabled) user else throw UserCannotReceiveMessagesException()
     }
 }

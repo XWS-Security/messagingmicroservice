@@ -25,3 +25,10 @@ INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (2, 3, 4
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (2, 1, 5);
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (3, 3, 2);
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (3, 0, 6);
+
+INSERT INTO message (message_type, id, read, text, user_id, conversation_id)
+    VALUES ('TEXT_MESSAGE', 1, false, 'Pozdrav!', 1, 1);
+INSERT INTO message (message_type, id, read, text, user_id, conversation_id)
+    VALUES ('TEXT_MESSAGE', 2, false, 'Pozdrav, Lule!', 2, 1);
+INSERT INTO message (message_type, id, read, text, user_id, conversation_id)
+    VALUES ('TEXT_MESSAGE', 3, false, 'Kako si?', 1, 1);
