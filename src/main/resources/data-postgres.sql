@@ -5,7 +5,7 @@ INSERT INTO nistagram_user(id, username, profile_private, messages_enabled) VALU
 INSERT INTO nistagram_user(id, username, profile_private, messages_enabled) VALUES ('3','vidoje', true, true);
 INSERT INTO nistagram_user(id, username, profile_private, messages_enabled) VALUES ('4','milica', true, true);
 INSERT INTO nistagram_user(id, username, profile_private, messages_enabled) VALUES ('5','duja', false, true);
-INSERT INTO nistagram_user(id, username, profile_private, messages_enabled) VALUES ('6','kobra', true, true);
+INSERT INTO nistagram_user(id, username, profile_private, messages_enabled) VALUES ('6','kobra', true, false);
 
 INSERT INTO user_role (user_id, role_id) VALUES (1, 1);
 INSERT INTO user_role (user_id, role_id) VALUES (2, 1);

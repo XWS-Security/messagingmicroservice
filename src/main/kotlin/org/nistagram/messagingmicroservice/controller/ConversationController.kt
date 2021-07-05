@@ -26,7 +26,6 @@ class ConversationController(private val conversationService: ConversationServic
     @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
     fun start(@RequestBody participants: List<String>): ResponseEntity<String> {
         return try {
-            println("Participants: $participants")
             conversationService.start(participants)
             ResponseEntity(HttpStatus.OK)
         } catch (e: Exception) {
