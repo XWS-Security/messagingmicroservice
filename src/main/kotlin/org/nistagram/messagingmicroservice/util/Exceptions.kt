@@ -4,4 +4,6 @@ class UserAlreadyExistsException : RuntimeException("User with the same username
 
 class UserDoesNotExistsException : RuntimeException("User with the same username does not exists.")
 
-class UserCannotReceiveMessages : RuntimeException("User has disabled messages. Try following them.")
+class UserCannotReceiveMessagesException : RuntimeException("User has disabled messages. Try following them.")
+
+class InvalidConversationException : RuntimeException("Conversation is not valid.")
