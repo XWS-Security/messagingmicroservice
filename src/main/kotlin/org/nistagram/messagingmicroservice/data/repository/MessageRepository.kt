@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 interface MessageRepository : CrudRepository<Message, Long> {
-    @Query("SELECT message_type, id, read, content_id, text, user_id, conversation_id FROM message " +
-            "WHERE conversation_id = :conversationId", nativeQuery = true)
+    @Query("SELECT * FROM message WHERE conversation_id = :conversationId ORDER BY sent_at ASC", nativeQuery = true)
     fun findByConversationId(conversationId: Long): List<Message>
 }

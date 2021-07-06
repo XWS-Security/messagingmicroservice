@@ -26,9 +26,20 @@ INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (2, 1, 5
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (3, 3, 2);
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (3, 0, 6);
 
-INSERT INTO message (message_type, id, read, text, user_id, conversation_id)
-    VALUES ('TEXT_MESSAGE', 1, false, 'Pozdrav!', 1, 1);
-INSERT INTO message (message_type, id, read, text, user_id, conversation_id)
-    VALUES ('TEXT_MESSAGE', 2, false, 'Pozdrav, Lule!', 2, 1);
-INSERT INTO message (message_type, id, read, text, user_id, conversation_id)
-    VALUES ('TEXT_MESSAGE', 3, false, 'Kako si?', 1, 1);
+INSERT INTO message (message_type, id, sent_at, text, user_id, conversation_id)
+    VALUES ('TEXT_MESSAGE', 1, '2021-07-05 21:58:58.508-07', 'Pozdrav!', 1, 1);
+INSERT INTO message (message_type, id, sent_at, text, user_id, conversation_id)
+    VALUES ('TEXT_MESSAGE', 2, '2021-07-05 21:58:59.508-07', 'Pozdrav, Lule!', 2, 1);
+INSERT INTO message (message_type, id, sent_at, text, user_id, conversation_id)
+    VALUES ('TEXT_MESSAGE', 3, '2021-07-05 21:59:00.508-07', 'Kako si?', 1, 1);
+INSERT INTO message (message_type, id, sent_at, text, user_id, conversation_id)
+    VALUES ('TEXT_MESSAGE', 4, '2021-07-05 21:56:00.508-07', 'Smarachyyyy', 5, 2);
+INSERT INTO message (message_type, id, sent_at, text, user_id, conversation_id)
+    VALUES ('TEXT_MESSAGE', 5, '2021-07-05 21:57:00.508-07', 'Dyyyyyy', 4, 2);
+
+INSERT INTO message(message_type, id, sent_at, content_id, user_id, conversation_id)
+	VALUES ('CONTENT_MESSAGE', 20, '2021-07-05 21:58:58.508-07', 1, 2, 1);
+INSERT INTO message(message_type, id, sent_at, content_id, user_id, conversation_id)
+	VALUES ('CONTENT_MESSAGE', 21, '2021-07-05 21:58:58.508-07', 1, 1, 2);
+	INSERT INTO message(message_type, id, sent_at, content_id, user_id, conversation_id)
+	VALUES ('CONTENT_MESSAGE', 22, '2021-07-05 22:00:00.508-07', 7, 1, 1);
