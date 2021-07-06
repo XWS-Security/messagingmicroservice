@@ -1,11 +1,10 @@
 package org.nistagram.messagingmicroservice.service.impl
 
+import org.nistagram.messagingmicroservice.controller.dto.CreateContentMessageDto
 import org.nistagram.messagingmicroservice.controller.dto.CreateTextMessageDto
 import org.nistagram.messagingmicroservice.controller.dto.MessageDto
 import org.nistagram.messagingmicroservice.controller.dto.MessageType
-import org.nistagram.messagingmicroservice.data.model.ContentMessage
-import org.nistagram.messagingmicroservice.data.model.TextMessage
-import org.nistagram.messagingmicroservice.data.model.User
+import org.nistagram.messagingmicroservice.data.model.*
 import org.nistagram.messagingmicroservice.data.repository.ConversationRepository
 import org.nistagram.messagingmicroservice.data.repository.MessageRepository
 import org.nistagram.messagingmicroservice.service.MessageService
@@ -38,11 +37,20 @@ class MessageServiceImpl(
             }
 
     override fun sendTextMessage(dto: CreateTextMessageDto) {
-        val message = TextMessage(text = dto.text).apply {
-            this.sentBy = getCurrentUser()
-        }
-        val optional = conversationRepository.findById(dto.conversationId)
-        val conversation = if (optional.isPresent) optional.get() else throw InvalidConversationException()
+        val message = TextMessage(text = dto.text)
+        saveMessage(message, dto.conversationId)
+    }
+
+    override fun sendContentMessage(dto: CreateContentMessageDto) {
+        val message = ContentMessage(contentId = dto.contentId)
+        saveMessage(message, dto.conversationId)
+    }
+
+    private fun saveMessage(message: Message, conversationId: Long) {
+        message.sentBy = getCurrentUser()
+        message.sentAt = Date()
+
+        val conversation = getConversation(conversationId)
         messageRepository.save(message)
         conversation.messages.add(message)
         conversationRepository.save(conversation)
@@ -52,6 +60,11 @@ class MessageServiceImpl(
         val obj = SecurityContextHolder.getContext().authentication.principal
         return if (obj is User) obj
         else throw UserDoesNotExistsException()
+    }
+
+    private fun getConversation(id: Long): Conversation {
+        val optional = conversationRepository.findById(id)
+        return if (optional.isPresent) optional.get() else throw InvalidConversationException()
     }
 
     private fun formatDate(date: Date): String {
