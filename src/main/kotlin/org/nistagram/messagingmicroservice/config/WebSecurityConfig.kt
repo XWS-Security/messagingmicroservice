@@ -57,6 +57,7 @@ class WebSecurityConfig(private val jwtUserDetailsService: CustomUserDetailsServ
                 .authorizeRequests()
                 .antMatchers("/users/**").permitAll()
                 .antMatchers("/conversations/**").permitAll()
+                .antMatchers("/messages/**").permitAll()
                 .anyRequest().authenticated().and()
                 // Add JWT token filter
                 .addFilterBefore(TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),

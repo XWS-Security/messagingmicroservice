@@ -1,5 +1,6 @@
 package org.nistagram.messagingmicroservice.data.model
 
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -12,7 +13,7 @@ abstract class Message(
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "message_sequence_generator")
     @Column(name = "id", unique = true)
     var id: Long = 0L,
-    var read: Boolean = false,
+    var sentAt: Date = Date(),
     @ManyToOne(cascade = [CascadeType.DETACH])
     @JoinColumn(name = "user_id")
     var sentBy: User = User()

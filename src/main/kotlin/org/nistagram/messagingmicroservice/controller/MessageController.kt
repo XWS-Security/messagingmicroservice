@@ -6,6 +6,7 @@ import org.nistagram.messagingmicroservice.service.MessageService
 import org.nistagram.messagingmicroservice.util.InvalidConversationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*
 @Validated
 class MessageController(private val messageService: MessageService) {
     @GetMapping("/{conversationId}")
+    @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
     fun findByConversationId(@PathVariable("conversationId") conversationId: Long): ResponseEntity<List<MessageDto>> =
         try {
             ResponseEntity(messageService.findByConversationId(conversationId), HttpStatus.OK)
@@ -22,6 +24,7 @@ class MessageController(private val messageService: MessageService) {
         }
 
     @PostMapping("/text")
+    @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
     fun sendTextMessage(@RequestBody message: CreateTextMessageDto): ResponseEntity<String> =
         try {
             messageService.sendTextMessage(message)
