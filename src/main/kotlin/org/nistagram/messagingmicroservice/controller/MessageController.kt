@@ -1,5 +1,6 @@
 package org.nistagram.messagingmicroservice.controller
 
+import org.nistagram.messagingmicroservice.controller.dto.CreateContentMessageDto
 import org.nistagram.messagingmicroservice.controller.dto.CreateTextMessageDto
 import org.nistagram.messagingmicroservice.controller.dto.MessageDto
 import org.nistagram.messagingmicroservice.service.MessageService
@@ -28,6 +29,18 @@ class MessageController(private val messageService: MessageService) {
     fun sendTextMessage(@RequestBody message: CreateTextMessageDto): ResponseEntity<String> =
         try {
             messageService.sendTextMessage(message)
+            ResponseEntity(HttpStatus.OK)
+        } catch (e: InvalidConversationException) {
+            ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
+        } catch (e: Exception) {
+            ResponseEntity("Something went wrong", HttpStatus.BAD_REQUEST)
+        }
+
+    @PostMapping("/content")
+    @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
+    fun sendContentMessage(@RequestBody message: CreateContentMessageDto): ResponseEntity<String> =
+        try {
+            messageService.sendContentMessage(message)
             ResponseEntity(HttpStatus.OK)
         } catch (e: InvalidConversationException) {
             ResponseEntity(e.message, HttpStatus.BAD_REQUEST)
