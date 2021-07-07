@@ -1,38 +1,47 @@
 package org.nistagram.messagingmicroservice.service.impl
 
-import org.nistagram.messagingmicroservice.controller.dto.CreateContentMessageDto
-import org.nistagram.messagingmicroservice.controller.dto.CreateTextMessageDto
-import org.nistagram.messagingmicroservice.controller.dto.MessageDto
-import org.nistagram.messagingmicroservice.controller.dto.MessageType
+import org.nistagram.messagingmicroservice.controller.dto.*
 import org.nistagram.messagingmicroservice.data.model.*
 import org.nistagram.messagingmicroservice.data.repository.ConversationRepository
 import org.nistagram.messagingmicroservice.data.repository.MessageRepository
+import org.nistagram.messagingmicroservice.service.FileService
 import org.nistagram.messagingmicroservice.service.MessageService
 import org.nistagram.messagingmicroservice.util.InvalidConversationException
+import org.nistagram.messagingmicroservice.util.MessageNotFoundException
 import org.nistagram.messagingmicroservice.util.UserDoesNotExistsException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
 class MessageServiceImpl(
     private val messageRepository: MessageRepository,
-    private val conversationRepository: ConversationRepository
+    private val conversationRepository: ConversationRepository,
+    private val fileService: FileService
 ) : MessageService {
+
     override fun findByConversationId(conversationId: Long): List<MessageDto> =
         messageRepository.findByConversationId(conversationId)
             .map { message ->
                 MessageDto(id = message.id, sentBy = message.sentBy.nistagramUsername).apply {
                     this.sentAt = formatDate(message.sentAt)
-                    if (message is TextMessage) {
-                        this.type = MessageType.TEXT
-                        this.text = message.text
-                    } else if (message is ContentMessage) {
-                        this.type = MessageType.CONTENT
-                        this.contentId = message.contentId
+                    when (message) {
+                        is TextMessage -> {
+                            this.type = MessageType.TEXT
+                            this.text = message.text
+                        }
+                        is ContentMessage -> {
+                            this.type = MessageType.CONTENT
+                            this.contentId = message.contentId
+                        }
+                        is OneTimeMessage -> {
+                            this.type = MessageType.ONE_TIME
+                            this.file = message.file
+                            this.seen = message.seenBy.contains(getCurrentUser())
+                        }
                     }
-                    // TODO: add fields for other types
                 }
             }
 
@@ -44,6 +53,22 @@ class MessageServiceImpl(
     override fun sendContentMessage(dto: CreateContentMessageDto) {
         val message = ContentMessage(contentId = dto.contentId)
         saveMessage(message, dto.conversationId)
+    }
+
+    override fun sendOneTimeMessage(dto: CreateOneTimeMessageDto, files: List<MultipartFile>) {
+        files.forEach { file: MultipartFile ->
+            val name = fileService.save(file)
+            if (name != "") saveMessage(OneTimeMessage(file = name), dto.conversationId)
+        }
+    }
+
+    override fun setMessageStatus(messageId: Long) {
+        val message = getMessage(messageId)
+        val user = getCurrentUser()
+        if (message is OneTimeMessage && !message.seenBy.contains(user)) {
+            message.seenBy.add(user)
+            messageRepository.save(message)
+        }
     }
 
     private fun saveMessage(message: Message, conversationId: Long) {
@@ -65,6 +90,11 @@ class MessageServiceImpl(
     private fun getConversation(id: Long): Conversation {
         val optional = conversationRepository.findById(id)
         return if (optional.isPresent) optional.get() else throw InvalidConversationException()
+    }
+
+    private fun getMessage(id: Long): Message {
+        val optional = messageRepository.findById(id)
+        return if (optional.isPresent) optional.get() else throw MessageNotFoundException()
     }
 
     private fun formatDate(date: Date): String {
