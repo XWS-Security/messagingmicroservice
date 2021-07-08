@@ -1,17 +1,21 @@
 package org.nistagram.messagingmicroservice.controller
 
 import org.nistagram.messagingmicroservice.controller.dto.ConversationDto
+import org.nistagram.messagingmicroservice.security.TokenUtils
 import org.nistagram.messagingmicroservice.service.ConversationService
+import org.nistagram.messagingmicroservice.util.AuthorizationException
+import org.nistagram.messagingmicroservice.util.UserDoesNotExistsException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping(value = ["/conversations"])
 @Validated
-class ConversationController(private val conversationService: ConversationService) {
+class ConversationController(private val conversationService: ConversationService, private val tokenUtils: TokenUtils) {
     @GetMapping("/")
     @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
     fun getAll(): ResponseEntity<List<ConversationDto>> {
@@ -24,11 +28,14 @@ class ConversationController(private val conversationService: ConversationServic
 
     @PostMapping("/")
     @PreAuthorize("hasAuthority('NISTAGRAM_USER_ROLE')")
-    fun start(@RequestBody participants: List<String>): ResponseEntity<String> {
+    fun start(@RequestBody participants: List<String>, request: HttpServletRequest): ResponseEntity<String> {
         return try {
-            conversationService.start(participants)
+            conversationService.start(participants, tokenUtils.getToken(request) ?: throw AuthorizationException())
             ResponseEntity(HttpStatus.OK)
+        } catch (e: AuthorizationException) {
+            ResponseEntity(HttpStatus.UNAUTHORIZED)
         } catch (e: Exception) {
+            e.printStackTrace()
             ResponseEntity("Something went wrong!", HttpStatus.BAD_REQUEST)
         }
     }
