@@ -7,5 +7,5 @@ interface UserService {
     fun save(user: User)
     fun delete(user: User)
     fun update(userDto: UpdateUserDto)
-    fun find(username: String): User
+    fun find(username: String, token: String): User
 }

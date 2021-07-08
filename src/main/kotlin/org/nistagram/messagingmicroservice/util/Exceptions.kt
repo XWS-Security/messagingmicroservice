@@ -13,3 +13,11 @@ class FileExtensionException : RuntimeException()
 class CouldNotGetFileException : RuntimeException("Sorry, the requested file could not be loaded.")
 
 class MessageNotFoundException : RuntimeException("Message does not exist.")
+
+class AuthorizationException : RuntimeException()
+
+class UserIsBlockedException :
+    RuntimeException("You have blocked this user. Unblock them first if you want to interact.")
+
+class UserHasBlockedYouException :
+    RuntimeException("This user has blocked you. You don't have access to their profile.")

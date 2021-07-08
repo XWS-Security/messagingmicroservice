@@ -18,13 +18,13 @@ INSERT INTO conversation (id) VALUES (1);
 INSERT INTO conversation (id) VALUES (2);
 INSERT INTO conversation (id) VALUES (3);
 
-INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (1, 0, 1);
+INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (1, 1, 1);
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (1, 3, 2);
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (2, 0, 1);
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (2, 3, 4);
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (2, 1, 5);
 INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (3, 3, 2);
-INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (3, 0, 6);
+INSERT INTO conversation_user (conversation_id, status, user_id) VALUES (3, 1, 6);
 
 INSERT INTO message (message_type, id, sent_at, text, user_id, conversation_id)
     VALUES ('TEXT_MESSAGE', 1, '2021-07-05 21:58:58.508-07', 'Pozdrav!', 1, 1);
