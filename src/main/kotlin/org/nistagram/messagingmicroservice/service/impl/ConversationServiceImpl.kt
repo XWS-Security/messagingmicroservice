@@ -12,6 +12,7 @@ import org.nistagram.messagingmicroservice.data.model.enum.ApprovalStatus
 import org.nistagram.messagingmicroservice.data.repository.ConversationRepository
 import org.nistagram.messagingmicroservice.data.repository.UserRepository
 import org.nistagram.messagingmicroservice.service.ConversationService
+import org.nistagram.messagingmicroservice.util.InvalidConversationException
 import org.nistagram.messagingmicroservice.util.UserDoesNotExistsException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
@@ -53,6 +54,34 @@ class ConversationServiceImpl(
         return areAllUsersValid
     }
 
+    override fun accept(id: Long) {
+        val user = getCurrentUser()
+        val conversation = getConversation(id)
+        if (conversation.participants.containsKey(user)) {
+            conversation.participants[user]!!.status = ApprovalStatus.ACCEPTED
+            conversationRepository.save(conversation)
+        } else throw InvalidConversationException()
+    }
+
+    override fun reject(id: Long) {
+        val user = getCurrentUser()
+        val conversation = getConversation(id)
+        if (conversation.participants.containsKey(user)) {
+            conversation.participants[user]!!.status = ApprovalStatus.REJECTED
+            conversationRepository.save(conversation)
+        } else throw InvalidConversationException()
+    }
+
+    override fun delete(id: Long) {
+        val user = getCurrentUser()
+        val conversation = getConversation(id)
+        if (conversation.participants.containsKey(user)) {
+            conversation.participants.remove(user)
+            if (conversation.participants.isEmpty()) conversationRepository.delete(conversation)
+            else conversationRepository.save(conversation)
+        } else throw InvalidConversationException()
+    }
+
     private fun getFollowingStatus(participant: String, token: String): String {
         // SSL
         val sslContext: SslContext = SslContextBuilder
@@ -82,5 +111,10 @@ class ConversationServiceImpl(
         val obj = SecurityContextHolder.getContext().authentication.principal
         return if (obj is User) obj
         else throw UserDoesNotExistsException()
+    }
+
+    private fun getConversation(id: Long): Conversation {
+        val optional = conversationRepository.findById(id)
+        return if (optional.isPresent) optional.get() else throw InvalidConversationException()
     }
 }
